@@ -14,9 +14,8 @@ export const sequelizeConfig = () => {
     dialect: 'postgres',
     uri: process.env.DB_URI,
     name: DbConnectionNames.DEFAULT,
-    autoLoadModels: true,
-    models: [__dirname + '/../../databases/models/**/*.ts'],
     logging: process.env.DB_LOGGING === 'true',
+    models: [__dirname + '/../../databases/models/**/*.ts'],
   };
 
   return config;

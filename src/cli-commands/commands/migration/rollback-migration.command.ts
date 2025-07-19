@@ -4,14 +4,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { InjectConnection } from '@nestjs/sequelize';
 import { Command, CommandRunner } from 'nest-commander';
-import { Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 import { MigrationMeta, SequelizeStorage, Umzug } from 'umzug';
 
 @Command({
-  name: 'run:migration',
-  description: 'Runs the migrations',
+  name: 'rollback:migration',
+  description: 'rollback the migrations',
 })
-export class RunMigrationCommand extends CommandRunner {
+export class RollbackMigrationCommand extends CommandRunner {
   constructor(@InjectConnection() private readonly connection: Sequelize) {
     super();
   }
@@ -37,14 +37,15 @@ export class RunMigrationCommand extends CommandRunner {
           };
         },
       },
-      context: this.connection.getQueryInterface(),
       storage: new SequelizeStorage({ sequelize: this.connection }),
+      context: this.connection.getQueryInterface(),
       logger: console,
     });
-    const migrationsMeta: MigrationMeta[] = await umzug.up();
+
+    const migrationsMeta: MigrationMeta[] = await umzug.down();
 
     if (migrationsMeta.length === 0) {
-      console.error('No migrations to Run');
+      console.error('No migrations to rollback');
     }
   }
 }

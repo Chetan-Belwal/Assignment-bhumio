@@ -6,4 +6,4 @@ async function bootstrap() {
   await CommandFactory.run(AppModule, new ConsoleLogger());
 }
 
-bootstrap();
+void bootstrap();
