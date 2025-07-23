@@ -6,6 +6,8 @@ import { EnvironmentModule } from './environment/environment.module';
 import { CommandModule } from './cli-commands/command.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { DashboardModule } from './dashboard/dashboard.module.';
+import { DashboardController } from './dashboard/controllers/dashboard/dashboard.controller';
 
 @Module({
   imports: [
@@ -14,8 +16,9 @@ import { AuthModule } from './auth/auth.module';
     CommandModule,
     UsersModule,
     AuthModule,
+    DashboardModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, DashboardController],
   providers: [AppService],
 })
 export class AppModule {}

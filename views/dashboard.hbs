@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Document for E-Signing</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .upload-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .file-upload-area {
+            border: 3px dashed #dee2e6;
+            border-radius: 15px;
+            padding: 60px 30px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover,
+        .file-upload-area.dragover {
+            border-color: #007bff;
+            background: rgba(0, 123, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .file-upload-icon {
+            font-size: 4rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .file-upload-area:hover .file-upload-icon {
+            color: #007bff;
+        }
+
+        .signer-card {
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .signer-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .signer-number {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .btn-custom {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-add-signer {
+            background: linear-gradient(45deg, #17a2b8, #138496);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-signer:hover {
+            background: linear-gradient(45deg, #138496, #117a8b);
+            transform: translateY(-1px);
+        }
+
+        .btn-remove {
+            background: #dc3545;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-remove:hover {
+            background: #c82333;
+            transform: scale(1.1);
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .navbar-custom {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+
+        .upload-progress {
+            display: none;
+        }
+
+        .file-selected {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-signature me-2"></i>
+                E-Sign Document Manager
+            </a>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="upload-container p-4 p-lg-5">
+                    <!-- Header -->
+                    <div class="text-center mb-5">
+                        <h1 class="display-6 fw-bold text-primary mb-3">
+                            <i class="fas fa-cloud-upload-alt me-3"></i>
+                            Upload Document for E-Signing
+                        </h1>
+                        <p class="lead text-muted">Upload your PDF document and define the signing workflow</p>
+                    </div>
+
+                    <form id="uploadForm" action="/documents/upload" method="POST" enctype="multipart/form-data">
+                        <!-- File Upload Section -->
+                        <div class="mb-5">
+                            <h4 class="mb-4">
+                                <i class="fas fa-file-pdf text-danger me-2"></i>
+                                Document Upload
+                            </h4>
+
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <div class="file-upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <h5 class="mb-3">Drag & Drop your PDF file here</h5>
+                                <p class="text-muted mb-3">or</p>
+                                <input type="file" id="fileInput" name="document" accept=".pdf" style="display: none;"
+                                    required>
+                                <button type="button" class="btn btn-outline-primary" id="browseButton">
+                                    <i class="fas fa-folder-open me-2"></i>
+                                    Browse Files
+                                </button>
+                                <div class="mt-3">
+                                    <small class="text-muted">Supported format: PDF (Max size: 10MB)</small>
+                                </div>
+                                <div id="fileInfo" class="mt-3" style="display: none;">
+                                    <div class="alert alert-success d-inline-block">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        <span id="fileName"></span>
+                                    </div>
+                                </div>
+                                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                            </div>
+
+                            <!-- Upload Progress -->
+                            <div class="upload-progress mt-3">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                        role="progressbar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Signers Section -->
+                        <div class="mb-5">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h4>
+                                    <i class="fas fa-users text-info me-2"></i>
+                                    Signing Workflow
+                                </h4>
+                                <button type="button" class="btn btn-add-signer" onclick="addSigner()">
+                                    <i class="fas fa-plus me-2"></i>
+                                    Add Signer
+                                </button>
+                            </div>
+
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Signing Order:</strong> Signers will receive documents in the order listed
+                                below. Each signer must complete their signature before the next person can sign.
+                            </div>
+
+                            <div id="signersContainer">
+                                <!-- Default first signer -->
+                                <div class="signer-card" data-signer="0">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <div class="signer-number">1</div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="name0"
+                                                    name="signers[0][name]" placeholder="Full Name" required>
+                                                <label for="name0">
+                                                    <i class="fas fa-user me-1"></i>
+                                                    Full Name
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-floating">
+                                                <input type="email" class="form-control" id="email0"
+                                                    name="signers[0][email]" placeholder="Email Address" required>
+                                                <label for="email0">
+                                                    <i class="fas fa-envelope me-1"></i>
+                                                    Email Address
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="role0"
+                                                    name="signers[0][role]" placeholder="Role/Title" required>
+                                                <label for="role0">
+                                                    <i class="fas fa-briefcase me-1"></i>
+                                                    Role/Title
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="button" class="btn btn-remove" onclick="removeSigner(this)"
+                                                disabled>
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Section -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-custom btn-lg px-5">
+                                <i class="fas fa-rocket me-2"></i>
+                                Upload & Setup E-Signing
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('browseButton').addEventListener('click', function () {
+            document.getElementById('fileInput').click();
+        });
+        let signerCount = 1;
+
+        // File upload handling
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Drag and drop functionality
+        fileUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', () => {
+            fileUploadArea.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        function handleFileSelect(file) {
+            errorMessage.style.display = 'none';
+
+            // Validate file type
+            if (file.type !== 'application/pdf') {
+                showError('Please select a PDF file only.');
+                return;
+            }
+
+            // Validate file size (10MB limit)
+            if (file.size > 10 * 1024 * 1024) {
+                showError('File size must be less than 10MB.');
+                return;
+            }
+
+            // Show file info
+            fileName.textContent = `${file.name} (${formatFileSize(file.size)})`;
+            fileInfo.style.display = 'block';
+
+            // Update file input
+            const dt = new DataTransfer();
+            dt.items.add(file);
+            fileInput.files = dt.files;
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            fileInfo.style.display = 'none';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Signer management
+        function addSigner() {
+            const container = document.getElementById('signersContainer');
+            const signerDiv = document.createElement('div');
+            signerDiv.className = 'signer-card';
+            signerDiv.setAttribute('data-signer', signerCount);
+
+            signerDiv.innerHTML = `
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <div class="signer-number">${signerCount + 1}</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="name${signerCount}" name="signers[${signerCount}][name]" placeholder="Full Name" required>
+                            <label for="name${signerCount}">
+                                <i class="fas fa-user me-1"></i>
+                                Full Name
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="email${signerCount}" name="signers[${signerCount}][email]" placeholder="Email Address" required>
+                            <label for="email${signerCount}">
+                                <i class="fas fa-envelope me-1"></i>
+                                Email Address
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="role${signerCount}" name="signers[${signerCount}][role]" placeholder="Role/Title" required>
+                            <label for="role${signerCount}">
+                                <i class="fas fa-briefcase me-1"></i>
+                                Role/Title
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-remove" onclick="removeSigner(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(signerDiv);
+            signerCount++;
+
+            // Enable remove button for first signer if more than one
+            updateRemoveButtons();
+        }
+
+        function removeSigner(button) {
+            button.closest('.signer-card').remove();
+            updateSignerNumbers();
+            updateRemoveButtons();
+        }
+
+        function updateSignerNumbers() {
+            const signers = document.querySelectorAll('.signer-card');
+            signers.forEach((signer, index) => {
+                const numberDiv = signer.querySelector('.signer-number');
+                numberDiv.textContent = index + 1;
+            });
+        }
+
+        function updateRemoveButtons() {
+            const removeButtons = document.querySelectorAll('.btn-remove');
+            removeButtons.forEach((button, index) => {
+                if (index === 0 && removeButtons.length === 1) {
+                    button.disabled = true;
+                } else {
+                    button.disabled = false;
+                }
+            });
+        }
+
+        // Form validation
+        document.getElementById('uploadForm').addEventListener('submit', function (e) {
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput.files.length) {
+                e.preventDefault();
+                showError('Please select a PDF file to upload.');
+                return;
+            }
+
+            // Show progress bar
+            document.querySelector('.upload-progress').style.display = 'block';
+
+            // Simulate progress (in real implementation, you'd track actual upload progress)
+            let progress = 0;
+            const progressBar = document.querySelector('.progress-bar');
+            const interval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                if (progress >= 90) {
+                    clearInterval(interval);
+                }
+            }, 100);
+        });
+
+        // Email validation
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Real-time email validation
+        document.addEventListener('input', function (e) {
+            if (e.target.type === 'email') {
+                const email = e.target.value;
+                if (email && !validateEmail(email)) {
+                    e.target.setCustomValidity('Please enter a valid email address');
+                } else {
+                    e.target.setCustomValidity('');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -2,8 +2,8 @@ import {
   Column,
   CreatedAt,
   DataType,
-  Model,
   UpdatedAt,
+  Model,
 } from 'sequelize-typescript';
 
 export abstract class DateModel<T> extends Model<T> {
