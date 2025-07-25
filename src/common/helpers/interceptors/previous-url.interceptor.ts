@@ -15,14 +15,14 @@ export class PreviousUrlInterceptor implements NestInterceptor {
     const request = ctx.getRequest<Request>();
 
     if (
-      request.accepts(['html', 'json', 'text']) === 'json' &&
-      request.method !== 'GET'
+      request.method.toUpperCase() === 'GET' &&
+      request.accepts(['html', 'text', 'json']) !== 'json'
     ) {
+      const session: Session & { [key: string]: any } = request.session;
+      session._previousUrl = request.url;
       return next.handle();
     }
 
-    const session: Session & { [key: string]: any } = request.session;
-    session._previousUrl = request.url;
     return next.handle();
   }
 }

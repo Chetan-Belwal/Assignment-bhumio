@@ -125,14 +125,14 @@
             transform: scale(1.1);
         }
 
-        .form-control {
+        .form-control, .form-select {
             border-radius: 10px;
             border: 2px solid #e9ecef;
             padding: 12px 15px;
             transition: all 0.3s ease;
         }
 
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             border-color: #007bff;
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
@@ -190,9 +190,9 @@
                         <p class="lead text-muted">Upload your PDF document and define the signing workflow</p>
                     </div>
 
-                    <form id="uploadForm" action="/documents/upload" method="POST" enctype="multipart/form-data">
+                    <form id="uploadForm" action="/documents/submit" method="POST" enctype="multipart/form-data">
                         <!-- File Upload Section -->
-                        <div class="mb-5">
+                        <div class="mb-5"> 
                             <h4 class="mb-4">
                                 <i class="fas fa-file-pdf text-danger me-2"></i>
                                 Document Upload
@@ -279,11 +279,15 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-floating">
-                                                <input type="text" class="form-control" id="role0"
-                                                    name="signers[0][role]" placeholder="Role/Title" required>
+                                                <select class="form-select" id="role0" name="signers[0][role]" required>
+                                                    <option value="">Select Role</option>
+                                                    <option value="SIGNER">Signer</option>
+                                                    <option value="APPROVER">Approver</option>
+                                                    <option value="VIEWER">Viewer</option>
+                                                </select>
                                                 <label for="role0">
                                                     <i class="fas fa-briefcase me-1"></i>
-                                                    Role/Title
+                                                    Role
                                                 </label>
                                             </div>
                                         </div>
@@ -353,18 +357,6 @@
         function handleFileSelect(file) {
             errorMessage.style.display = 'none';
 
-            // Validate file type
-            if (file.type !== 'application/pdf') {
-                showError('Please select a PDF file only.');
-                return;
-            }
-
-            // Validate file size (10MB limit)
-            if (file.size > 10 * 1024 * 1024) {
-                showError('File size must be less than 10MB.');
-                return;
-            }
-
             // Show file info
             fileName.textContent = `${file.name} (${formatFileSize(file.size)})`;
             fileInfo.style.display = 'block';
@@ -373,12 +365,6 @@
             const dt = new DataTransfer();
             dt.items.add(file);
             fileInput.files = dt.files;
-        }
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            fileInfo.style.display = 'none';
         }
 
         function formatFileSize(bytes) {
@@ -421,10 +407,15 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="role${signerCount}" name="signers[${signerCount}][role]" placeholder="Role/Title" required>
+                            <select class="form-select" id="role${signerCount}" name="signers[${signerCount}][role]" required>
+                                <option value="">Select Role</option>
+                                <option value="SIGNER">Signer</option>
+                                <option value="APPROVER">Approver</option>
+                                <option value="VIEWER">Viewer</option>
+                            </select>
                             <label for="role${signerCount}">
                                 <i class="fas fa-briefcase me-1"></i>
-                                Role/Title
+                                Role
                             </label>
                         </div>
                     </div>
@@ -468,15 +459,8 @@
             });
         }
 
-        // Form validation
+        // Form submission with progress bar
         document.getElementById('uploadForm').addEventListener('submit', function (e) {
-            const fileInput = document.getElementById('fileInput');
-            if (!fileInput.files.length) {
-                e.preventDefault();
-                showError('Please select a PDF file to upload.');
-                return;
-            }
-
             // Show progress bar
             document.querySelector('.upload-progress').style.display = 'block';
 
@@ -490,24 +474,6 @@
                     clearInterval(interval);
                 }
             }, 100);
-        });
-
-        // Email validation
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-
-        // Real-time email validation
-        document.addEventListener('input', function (e) {
-            if (e.target.type === 'email') {
-                const email = e.target.value;
-                if (email && !validateEmail(email)) {
-                    e.target.setCustomValidity('Please enter a valid email address');
-                } else {
-                    e.target.setCustomValidity('');
-                }
-            }
         });
     </script>
 </body>

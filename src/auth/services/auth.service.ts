@@ -39,7 +39,6 @@ export class AuthService {
         password,
         user.password,
       );
-      console.log('User validation:', isPasswordValid);
       if (isPasswordValid) {
         const session: Session & { [key: string]: any } = req.session;
 
@@ -47,9 +46,15 @@ export class AuthService {
           isAuthenticated: true,
           userId: user.id,
         };
-
-        session.save();
-        return;
+        return new Promise((res, rej) => {
+          session.save((err) => {
+            if (err instanceof Error) {
+              rej(err);
+              return;
+            }
+            res(true);
+          });
+        });
       }
     }
     throw new UnprocessableEntityException([
@@ -59,5 +64,14 @@ export class AuthService {
         },
       },
     ]);
+  }
+  /**
+   * Finds a user by ID.
+   * @param id
+   * @returns
+   */
+
+  public finUserById(id: number): Promise<UserModel | null> {
+    return this.usersService.findById(id);
   }
 }

@@ -9,8 +9,6 @@ import { Umzug } from 'umzug';
 })
 export class MakeMigrationCommand extends CommandRunner {
   run(passedParams: string[], options?: Record<string, any>): Promise<void> {
-    console.log('make:migration', passedParams, options);
-
     const umzug = new Umzug({
       migrations: {
         glob: `${process.cwd()}/src/database/migrations/*.ts`,

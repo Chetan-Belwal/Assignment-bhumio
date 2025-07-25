@@ -2,11 +2,11 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { Session } from 'express-session';
 import { Observable } from 'rxjs';
-import { UsersService } from '../../../users/services/users.service';
+import { AuthService } from '../../services/auth.service';
 
 @Injectable()
 export class UserAuthGuard implements CanActivate {
-  constructor(private readonly userService: UsersService) {}
+  constructor(private readonly authService: AuthService) {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -16,7 +16,7 @@ export class UserAuthGuard implements CanActivate {
     if (session.auth.isAuthenticated) {
       const userId = session.auth.userId as number;
 
-      return this.userService.findById(userId).then((user) => {
+      return this.authService.finUserById(userId).then((user) => {
         if (user) {
           request.user = user; // Attach user to request object
           return true;

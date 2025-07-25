@@ -26,12 +26,12 @@ export class RollbackMigrationCommand extends CommandRunner {
           return {
             name,
             up: async () =>
-              import(path as string).then((migration) =>
+              import(path).then((migration) =>
                 migration.up(context, this.connection.Sequelize),
               ),
 
             down: async () =>
-              import(path as string).then((migration) =>
+              import(path).then((migration) =>
                 migration.down(context, this.connection.Sequelize),
               ),
           };

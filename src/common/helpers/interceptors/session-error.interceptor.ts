@@ -15,7 +15,6 @@ export class SessionErrorInterceptor implements NestInterceptor {
     const request = ctx.getRequest<Request>();
 
     const errorBagFromFlash: string[] = request.flash(VALIDATION_ERROR);
-    console.log(errorBagFromFlash);
     if (errorBagFromFlash.length > 0) {
       const err: object = JSON.parse(errorBagFromFlash[0]) as object;
 

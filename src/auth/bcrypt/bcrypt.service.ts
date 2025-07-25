@@ -22,7 +22,6 @@ export class BcryptService {
     toBeCompared: string,
     encryptedValue: string,
   ): Promise<boolean> {
-    console.log('Comparing:', toBeCompared, 'with:', encryptedValue);
     return await compare(toBeCompared, encryptedValue);
   }
 }

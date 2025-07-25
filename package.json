@@ -39,6 +39,7 @@
     "express-handlebars": "^8.0.3",
     "express-session": "^1.18.2",
     "nest-commander": "^3.17.0",
+    "nestjs-form-data": "^1.9.93",
     "pg": "^8.16.2",
     "pg-hstore": "^2.3.4",
     "pgvector": "^0.2.1",

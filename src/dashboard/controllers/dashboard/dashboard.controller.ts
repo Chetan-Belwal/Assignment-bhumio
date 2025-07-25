@@ -11,7 +11,6 @@ export class DashboardController {
   @Render('dashboard')
   @Get()
   public getDashboard(@User() user: UserModel) {
-    console.log('User:', user);
     return { message: 'Welcome to the dashboard!' };
   }
 }
