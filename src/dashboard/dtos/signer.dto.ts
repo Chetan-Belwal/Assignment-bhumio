@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsIn, IsNotEmpty, IsString } from 'class-validator';
+import { SignerRole } from '../../database/models/signer.model';
 
 export class SignerDto {
   @ApiProperty()
@@ -14,6 +15,7 @@ export class SignerDto {
 
   @ApiProperty()
   @IsString()
+  @IsIn([SignerRole.SIGNER, SignerRole.APPROVER, SignerRole.VIEWER])
   @IsNotEmpty()
-  public role: string;
+  public role: SignerRole;
 }

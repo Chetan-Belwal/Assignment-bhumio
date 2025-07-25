@@ -1,4 +1,11 @@
-import { BelongsTo, Column, DataType } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  Default,
+  ForeignKey,
+  Table,
+} from 'sequelize-typescript';
 import { BaseModel } from './base.model';
 import { DocumentModel } from './document.model';
 import { UserModel } from './user.model';
@@ -9,6 +16,12 @@ export enum SignerRole {
   VIEWER = 'VIEWER',
 }
 
+export enum SignerStatus {
+  IN_PROGRESS = 'In-Progress',
+  COMPLETED = 'Completed',
+}
+
+@Table({ tableName: 'signers' })
 export class SignerModel extends BaseModel<SignerModel> {
   @Column
   public name: string;
@@ -19,12 +32,15 @@ export class SignerModel extends BaseModel<SignerModel> {
   @Column
   public role: SignerRole;
 
+  @ForeignKey(() => DocumentModel)
   @Column
   public document_id: number;
 
+  @Default(SignerStatus.IN_PROGRESS)
   @Column
-  public status: string;
+  public status: SignerStatus;
 
+  @ForeignKey(() => UserModel)
   @Column
   public user_id: number;
 
