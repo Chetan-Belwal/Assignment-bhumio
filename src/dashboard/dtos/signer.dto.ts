@@ -1,6 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsIn, IsNotEmpty, IsString } from 'class-validator';
-import { SignerRole } from '../../database/models/signer.model';
+import {
+  IsEmail,
+  IsIn,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { CreateField, SignerRole } from '../../database/models/signer.model';
+import { Type } from 'class-transformer';
 
 export class SignerDto {
   @ApiProperty()
@@ -18,4 +26,12 @@ export class SignerDto {
   @IsIn([SignerRole.SIGNER, SignerRole.APPROVER, SignerRole.VIEWER])
   @IsNotEmpty()
   public role: SignerRole;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  public sequence_number: number;
+
+  @IsOptional()
+  public field: CreateField;
 }

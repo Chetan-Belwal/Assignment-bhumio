@@ -34,4 +34,34 @@ export class DocumentRepoService {
       })
       .save({ transaction });
   }
+
+  /**
+   * Find document by id
+   * @param id
+   * @returns
+   */
+  public findById(
+    id: number,
+    transaction?: Transaction,
+  ): Promise<DocumentModel | null> {
+    return this.documentModel.findByPk(id, { transaction });
+  }
+
+  /**
+   * update documenso id in document table
+   * @param id
+   * @param documensoId
+   * @param transaction
+   * @returns
+   */
+  public updateDocumensoId(
+    id: number,
+    documensoId: number,
+    transaction?: Transaction,
+  ): Promise<[affectedCount: number]> {
+    return this.documentModel.update(
+      { documenso_id: documensoId },
+      { where: { id }, transaction },
+    );
+  }
 }

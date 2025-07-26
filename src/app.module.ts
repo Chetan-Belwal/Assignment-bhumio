@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { FileManagementModule } from './file-management/file-management.module';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { FileManagementModule } from './file-management/file-management.module';
     AuthModule,
     DashboardModule,
     FileManagementModule,
+    QueueModule,
   ],
   controllers: [AppController],
   providers: [AppService],

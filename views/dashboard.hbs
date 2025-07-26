@@ -125,14 +125,16 @@
             transform: scale(1.1);
         }
 
-        .form-control, .form-select {
+        .form-control,
+        .form-select {
             border-radius: 10px;
             border: 2px solid #e9ecef;
             padding: 12px 15px;
             transition: all 0.3s ease;
         }
 
-        .form-control:focus, .form-select:focus {
+        .form-control:focus,
+        .form-select:focus {
             border-color: #007bff;
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
@@ -192,7 +194,7 @@
 
                     <form id="uploadForm" action="/documents/submit" method="POST" enctype="multipart/form-data">
                         <!-- File Upload Section -->
-                        <div class="mb-5"> 
+                        <div class="mb-5">
                             <h4 class="mb-4">
                                 <i class="fas fa-file-pdf text-danger me-2"></i>
                                 Document Upload
@@ -269,6 +271,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-floating">
+                                                <input type="hidden" value="1" name="signers[0][sequence_number]">
                                                 <input type="email" class="form-control" id="email0"
                                                     name="signers[0][email]" placeholder="Email Address" required>
                                                 <label for="email0">
@@ -389,6 +392,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-floating">
+                         <input type="hidden" value="${signerCount + 1}" name="signers[${signerCount}][sequence_number]">
                             <input type="text" class="form-control" id="name${signerCount}" name="signers[${signerCount}][name]" placeholder="Full Name" required>
                             <label for="name${signerCount}">
                                 <i class="fas fa-user me-1"></i>

@@ -19,7 +19,10 @@ export class SignerRepoService {
    * @returns
    */
   public store(
-    signerInfo: Pick<SignerModel, 'name' | 'email' | 'role'>,
+    signerInfo: Pick<
+      SignerModel,
+      'name' | 'email' | 'role' | 'sequence_number' | 'field'
+    >,
     user: UserModel | number,
     document_id: number,
     transaction?: Transaction,
@@ -32,5 +35,30 @@ export class SignerRepoService {
         user_id: typeof user === 'number' ? user : user.id,
       })
       .save({ transaction });
+  }
+  /**
+   * Find all signer by document id
+   * @param document_id
+   * @param transaction
+   * @returns
+   */
+  public findAllSignerByDocumentId(
+    document_id: number,
+    transaction?: Transaction,
+  ): Promise<SignerModel[]> {
+    return this.signerModel.findAll({ where: { document_id }, transaction });
+  }
+
+  /**
+   * Update documenso recipient id
+   * @param signerId
+   * @param recipientId
+   * @returns
+   */
+  public updateDocumensoRecipientId(signerId: number, recipientId: number) {
+    return this.signerModel.update(
+      { documenso_recipient_id: recipientId },
+      { where: { id: signerId } },
+    );
   }
 }

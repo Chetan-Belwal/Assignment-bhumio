@@ -4,10 +4,16 @@ import { DashboardController } from './controllers/dashboard/dashboard.controlle
 import { DocumentRepoService } from './services/document-repo.service';
 import { SignerRepoService } from './services/signer-repo.service';
 import { DocumentHandlerService } from './services/document-handler.service';
+import { DocumensoApiHandler } from './services/esign/handlers/documenso-api.handler';
 
 @Module({
   imports: [],
   controllers: [DashboardController, DocumentHandlerController],
-  providers: [DocumentHandlerService, DocumentRepoService, SignerRepoService],
+  providers: [
+    DocumentHandlerService,
+    DocumentRepoService,
+    SignerRepoService,
+    DocumensoApiHandler,
+  ],
 })
 export class DashboardModule {}

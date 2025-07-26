@@ -21,6 +21,28 @@ export enum SignerStatus {
   COMPLETED = 'Completed',
 }
 
+export type FieldType =
+  | 'SIGNATURE'
+  | 'TEXT'
+  | 'EMAIL'
+  | 'NAME'
+  | 'DATE'
+  | 'CHECKBOX'
+  | 'RADIO'
+  | 'NUMBER'
+  | 'SELECT'
+  | 'INITIALS';
+
+export interface CreateField {
+  recipientId?: number;
+  type: FieldType;
+  pageNumber: number; // 1-based page number
+  pageX: number; // X coordinate on the page
+  pageY: number; // Y coordinate on the page
+  pageWidth: number; // Width of the field
+  pageHeight: number; // Height of the field
+}
+
 @Table({ tableName: 'signers' })
 export class SignerModel extends BaseModel<SignerModel> {
   @Column
@@ -45,10 +67,16 @@ export class SignerModel extends BaseModel<SignerModel> {
   public user_id: number;
 
   @Column(DataType.JSON)
-  public fields: string;
+  public field: CreateField;
 
   @Column
   public signing_url: string;
+
+  @Column
+  public sequence_number: number;
+
+  @Column
+  public documenso_recipient_id: number;
 
   @BelongsTo(() => DocumentModel)
   public document: DocumentModel;

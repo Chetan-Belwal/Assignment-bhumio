@@ -39,7 +39,12 @@ module.exports = {
         allowNull: true,
         defaultValue: null,
       },
-      fields: {
+      sequence_number: {
+        type: DataType.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+      },
+      field: {
         type: DataType.JSON,
         allowNull: true,
         defaultValue: null,
@@ -56,6 +61,11 @@ module.exports = {
       },
       signing_url: {
         type: DataType.STRING,
+        allowNull: true,
+        defaultValue: null,
+      },
+      documenso_recipient_id: {
+        type: DataType.INTEGER,
         allowNull: true,
         defaultValue: null,
       },
