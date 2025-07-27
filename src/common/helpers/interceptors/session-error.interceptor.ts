@@ -18,7 +18,7 @@ export class SessionErrorInterceptor implements NestInterceptor {
     if (errorBagFromFlash.length > 0) {
       const err: object = JSON.parse(errorBagFromFlash[0]) as object;
 
-      const formattedError = Object.values(err).map((err: string) => err);
+      const formattedError = Object.values(err).flat();
 
       return next.handle().pipe(
         map((templateContext: { [key: string]: any } = {}) => {

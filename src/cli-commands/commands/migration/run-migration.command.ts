@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { InjectConnection } from '@nestjs/sequelize';
 import { Command, CommandRunner } from 'nest-commander';
@@ -26,12 +25,12 @@ export class RunMigrationCommand extends CommandRunner {
           return {
             name,
             up: async () =>
-              import(path as string).then((migration) =>
+              import(path).then((migration) =>
                 migration.up(context, this.connection.Sequelize),
               ),
 
             down: async () =>
-              import(path as string).then((migration) =>
+              import(path).then((migration) =>
                 migration.down(context, this.connection.Sequelize),
               ),
           };

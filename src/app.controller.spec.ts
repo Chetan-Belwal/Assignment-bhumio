@@ -15,8 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should redirect to /auth/login', () => {
+      expect(appController.root()).toEqual({ message: 'Hello world!' });
     });
   });
 });
