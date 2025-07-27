@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Post, Render, Req, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SignupDto } from '../dtos/signup.dto';
-import { UserModel } from '../../database/models/user.model';
 import { LoginDto } from '../dtos/login.dto';
 import { Request, Response } from 'express';
 import { AuthService } from '../services/auth.service';
@@ -20,8 +19,12 @@ export class AuthController {
   public loginPage() {}
 
   @Post('signup')
-  public async signup(@Body() userInfo: SignupDto): Promise<UserModel> {
-    return this.authService.createUser(userInfo);
+  public async signup(
+    @Body() userInfo: SignupDto,
+    @Res() response: Response,
+  ): Promise<any> {
+    await this.authService.createUser(userInfo);
+    return response.redirect('/auth/login');
   }
 
   @Post('login')
